@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "nonebot-plugin-llm-jade"
+version = "0.0.2"
+description = "基于 LLM 的玉检测插件"
+authors = ["【夜风】NightWind <2125714976@qq.com>"]
+license = "GPL3"
+readme = "README.md"
+packages = [{include = "nonebot_plugin_llm_jade"}]
+homepage = "https://github.com/XTxiaoting14332/nonebot-plugin-llm-jade"
+repository = "https://github.com/XTxiaoting14332/nonebot-plugin-llm-jade"
+documentation = "https://github.com/XTxiaoting14332/nonebot-plugin-llm-jade#README.md"
+
+[[tool.poetry.source]]
+name = "tsinghua"
+url = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple/"
+default = true
+
+[tool.poetry.dependencies]
+python = ">=3.10"
+nonebot2 = ">=2.2.0"
+httpx = "<0.28.0"
+ujson = ">=5.0.0"
+PyJWT = ">=2.3.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
