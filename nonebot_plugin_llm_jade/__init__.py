@@ -75,16 +75,20 @@ jade = on_message(priority=1, block=False)
 async def handle(bot: Bot, event: GroupMessageEvent):
     for i in event.message:
         if i.type == "image":
-            if random.randint(0, 1) < config.jadefoot_probability:
-                img_url = i.data["url"]
-                logger.info(img_url)
-                auth = generate_token(token)
-                res = await req_glm(auth, img_url)
-                #  判断回复是否为true
-                if (res == "true" or res == "True"):
-                    await jade.finish("玉！", reply_message=True)
-                else:
-                    await jade.finish()
+            img_url = i.data["url"]
+            logger.info(img_url)
+            auth = generate_token(token)
+            res = await req_glm(auth, img_url)
+            if res == "true" or res == "True":
+                logger.info("够玉")
+            else:
+                logger.info("不够玉")
+                logger.info(res)
+            #  判断回复是否为true
+            if (res == "true" or res == "True") and random.randint(0, 1) < config.jadefoot_probability:
+                await jade.finish("玉！", reply_message=True)
+            else:
+                await jade.finish()
 
 
 # 异步请求AI
