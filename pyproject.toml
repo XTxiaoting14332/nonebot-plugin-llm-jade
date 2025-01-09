@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nonebot-plugin-llm-jade"
-version = "0.0.4"
+version = "0.0.5"
 description = "基于 LLM 的玉检测插件"
 authors = ["【夜风】NightWind <2125714976@qq.com>"]
 license = "GPL3"
@@ -18,7 +18,7 @@ default = true
 [tool.poetry.dependencies]
 python = ">=3.9"
 nonebot2 = ">=2.2.0"
-httpx = "<=0.27.0"
+httpx = ">=0.28.1"
 PyJWT = ">=2.3.0"
 
 [build-system]
