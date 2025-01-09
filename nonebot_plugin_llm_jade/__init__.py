@@ -85,15 +85,27 @@ async def handle(bot: Bot, event: GroupMessageEvent):
                 await jade.finish("涩！", reply_message=True)
                 return
 
-            if res == "true" or res == "True":
-                logger.info("够玉")
+            reply_map = {
+                "yuzu_y": "玉！",
+                "yuzu_n": "¿",
+                "black": "man！",
+            }
+
+            # 如果标签不在字典中，不回复，直接结束
+            if res not in reply_map:
+                logger.info("图片无特殊要素")
+                await jade.finish()
+                return
+
+            # 判断是否符合概率条件
+            if random.randint(0, 1) < config.jadefoot_probability:
+                # 获取并回复对应的内容
+                reply_message = reply_map.get(res)
+                logger.info(f"够 {reply_message}")
+                await jade.finish(reply_message, reply_message=True)
             else:
-                logger.info("不够玉")
-                logger.info(res)
-            #  判断回复是否为true
-            if (res == "true" or res == "True") and random.randint(0, 1) < config.jadefoot_probability:
-                await jade.finish("玉！", reply_message=True)
-            else:
+                reply_message = reply_map.get(res)
+                logger.info(f"够 {reply_message}，但是概率不够")
                 await jade.finish()
 
 
