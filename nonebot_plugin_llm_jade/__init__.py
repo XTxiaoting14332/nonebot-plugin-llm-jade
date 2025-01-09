@@ -61,10 +61,14 @@ async def handle(bot: Bot, event: GroupMessageEvent):
             logger.info(img_url)
             auth = generate_token(token)
             res = await req_glm(auth, img_url)
-
-            # 模型拦截检查
-            if is_error_response(res):
-                await jade.finish("涩！", reply_message=True)
+            try:
+                # 模型拦截检查
+                if is_error_response(res):
+                    await jade.finish("涩！", reply_message=True)
+                    return
+            except ValueError:
+                # 捕获不支持的图片异常
+                await jade.finish()
                 return
 
             reply_map = {
@@ -139,7 +143,13 @@ async def url_to_base64(url):
 def is_error_response(res):
     if isinstance(res, dict) and 'error' in res:
         error_code = res['error'].get('code')
+        # 处理错误代码 1301（敏感内容）
         if error_code == '1301':
-            logger.error(f"模型敏感内容: {res['error']['message']}")
+            logger.info(f"模型敏感内容: {res['error']['message']}")
             return True
+        # 处理错误代码 1210（不支持的图片）
+        elif error_code == '1210':
+            logger.info("接收到不支持的图片")
+            raise ValueError("不支持的图片")  # 抛出异常来阻止后续逻辑
     return False
+
