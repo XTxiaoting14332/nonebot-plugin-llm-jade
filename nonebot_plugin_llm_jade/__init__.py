@@ -70,15 +70,16 @@ jade = on_message(priority=1, block=False)
 async def handle(bot: Bot, event: GroupMessageEvent):
     for i in event.message:
         if i.type == "image":
-            img_url = i.data["url"]
-            logger.info(img_url)
-            auth = generate_token(token)
-            res = await req_glm(auth, img_url)
-            #  判断回复是否为true
-            if (res == "true" or res == "True") and random.randint(0, 1) < config.jadefoot_probability:
-                await jade.finish("玉！", reply_message=True)
-            else:
-                await jade.finish()
+            if random.randint(0, 1) < config.jadefoot_probability:
+                img_url = i.data["url"]
+                logger.info(img_url)
+                auth = generate_token(token)
+                res = await req_glm(auth, img_url)
+                #  判断回复是否为true
+                if (res == "true" or res == "True"):
+                    await jade.finish("玉！", reply_message=True)
+                else:
+                    await jade.finish()
 
 
 
