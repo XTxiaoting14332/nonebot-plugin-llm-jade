@@ -10,7 +10,6 @@ import base64
 import random
 from nonebot.plugin import PluginMetadata
 
-
 __plugin_meta__ = PluginMetadata(
     name="玉！",
     description="基于 LLM 的玉检测插件",
@@ -23,6 +22,8 @@ __plugin_meta__ = PluginMetadata(
 )
 
 config = get_plugin_config(Config)
+
+
 def generate_token(apikey: str):
     try:
         id, secret = apikey.split(".")
@@ -41,9 +42,12 @@ def generate_token(apikey: str):
         algorithm="HS256",
         headers={"alg": "HS256", "sign_type": "SIGN"},
     )
+
+
 token = config.jadefoot_token
 
-#生成JWT
+
+# 生成JWT
 def generate_token(apikey: str):
     try:
         id, secret = apikey.split(".")
@@ -66,6 +70,7 @@ def generate_token(apikey: str):
 
 jade = on_message(priority=1, block=False)
 
+
 @jade.handle()
 async def handle(bot: Bot, event: GroupMessageEvent):
     for i in event.message:
@@ -82,37 +87,31 @@ async def handle(bot: Bot, event: GroupMessageEvent):
                     await jade.finish()
 
 
-
-
-
-
-
-
-#异步请求AI
+# 异步请求AI
 async def req_glm(auth_token, img_url):
     img_base = await url_to_base64(img_url)
     headers = {
         "Authorization": f"Bearer {auth_token}"
     }
     data = {
-            "model": "glm-4v-flash",
-            "temperature": 0.3,
-            "messages": [{
-              "role": "user",
-              "content": [
+        "model": "glm-4v-flash",
+        "temperature": 0.3,
+        "messages": [{
+            "role": "user",
+            "content": [
                 {
-                  "type": "text",
-                  "text": "判断图片中是否出现了人类的脚，（包括裸足，穿袜，穿鞋等），如果是请仅回复“true”，如果不是请仅回复“false”"
+                    "type": "text",
+                    "text": "判断图片中是否出现了人类的脚，（包括裸足，穿袜，穿鞋等），如果是请仅回复“true”，如果不是请仅回复“false”"
                 },
                 {
-                  "type": "image_url",
-                  "image_url": {
-                    "url": img_base
-                  }
+                    "type": "image_url",
+                    "image_url": {
+                        "url": img_base
+                    }
                 }
-              ]
-            }]
-        }
+            ]
+        }]
+    }
 
     async with httpx.AsyncClient(timeout=httpx.Timeout(connect=10, read=20, write=20, pool=30)) as client:
         res = await client.post("https://open.bigmodel.cn/api/paas/v4/chat/completions", headers=headers, json=data)
@@ -124,7 +123,7 @@ async def req_glm(auth_token, img_url):
     return res_raw
 
 
-#url转base64
+# url转base64
 async def url_to_base64(url):
     async with httpx.AsyncClient(verify=False) as client:
         response = await client.get(url)
