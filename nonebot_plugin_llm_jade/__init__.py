@@ -66,7 +66,6 @@ async def handle(bot: Bot, event: GroupMessageEvent):
             reply_map = {
                 "yuzu_y": "玉！",
                 "yuzu_n": "¿",
-                "black": "man！",
             }
 
             # 如果标签不在字典中，不回复，直接结束
@@ -104,8 +103,7 @@ async def req_glm(auth_token, img_url):
                     "text": "需要你进行以下判断，并仅回复符合的标签(如果有多个符合只随机回复一个)："
                             "1.图片中是否出现了人类或动漫人物的脚（包括裸足，穿袜，穿鞋等），如果是请仅回复“yuzu_y”"
                             "2.图片中是否出现了非人类（包括机器人，食物，玩具等）的脚，如果是请仅回复“yuzu_n”"
-                            "3.图片中是否出现了黑色肤色的人（包括真人、动漫人物），如果是请仅回复“black”"
-                            "4.都不符合请回复“none”"
+                            "3.都不符合请回复“none”"
                 },
                 {
                     "type": "image_url",
