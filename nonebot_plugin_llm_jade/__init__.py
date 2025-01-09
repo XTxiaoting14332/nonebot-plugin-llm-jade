@@ -46,28 +46,6 @@ def generate_token(apikey: str):
 
 token = config.jadefoot_token
 
-
-# 生成JWT
-def generate_token(apikey: str):
-    try:
-        id, secret = apikey.split(".")
-    except Exception as e:
-        raise Exception("错误的apikey！", e)
-
-    payload = {
-        "api_key": id,
-        "exp": datetime.utcnow() + timedelta(days=1),
-        "timestamp": int(round(time.time() * 1000)),
-    }
-
-    return jwt.encode(
-        payload,
-        secret,
-        algorithm="HS256",
-        headers={"alg": "HS256", "sign_type": "SIGN"},
-    )
-
-
 jade = on_message(priority=1, block=False)
 
 
