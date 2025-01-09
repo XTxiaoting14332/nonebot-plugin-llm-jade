@@ -79,6 +79,12 @@ async def handle(bot: Bot, event: GroupMessageEvent):
             logger.info(img_url)
             auth = generate_token(token)
             res = await req_glm(auth, img_url)
+
+            # 模型拦截检查
+            if is_error_response(res):
+                await jade.finish("涩！", reply_message=True)
+                return
+
             if res == "true" or res == "True":
                 logger.info("够玉")
             else:
@@ -141,3 +147,13 @@ async def url_to_base64(url):
             return base64_encoded
         else:
             raise Exception("无法下载图片，状态码：", response.status_code)
+
+
+# 检查返回是否为错误
+def is_error_response(res):
+    if isinstance(res, dict) and 'error' in res:
+        error_code = res['error'].get('code')
+        if error_code == '1301':
+            logger.error(f"模型敏感内容: {res['error']['message']}")
+            return True
+    return False
