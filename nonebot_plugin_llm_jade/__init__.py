@@ -53,6 +53,10 @@ jade = on_message(priority=1, block=False)
 async def handle(bot: Bot, event: GroupMessageEvent):
     for i in event.message:
         if i.type == "image":
+            if random.randint(0, 1) > config.jadefoot_probability:
+                logger.info("概率未满足，跳过请求")
+                await jade.finish()
+                return
             img_url = i.data["url"]
             logger.info(img_url)
             auth = generate_token(token)
@@ -74,16 +78,10 @@ async def handle(bot: Bot, event: GroupMessageEvent):
                 await jade.finish()
                 return
 
-            # 判断是否符合概率条件
-            if random.randint(0, 1) < config.jadefoot_probability:
-                # 获取并回复对应的内容
-                reply_message = reply_map.get(res)
-                logger.info(f"够 {reply_message}")
-                await jade.finish(reply_message, reply_message=True)
-            else:
-                reply_message = reply_map.get(res)
-                logger.info(f"够 {reply_message}，但是概率不够")
-                await jade.finish()
+            # 获取并回复对应的内容
+            reply_message = reply_map.get(res)
+            logger.info(f"够 {reply_message}")
+            await jade.finish(reply_message, reply_message=True)
 
 
 # 异步请求AI
