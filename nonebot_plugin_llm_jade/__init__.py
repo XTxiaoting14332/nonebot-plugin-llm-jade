@@ -54,7 +54,7 @@ async def handle(bot: Bot, event: GroupMessageEvent):
     for i in event.message:
         if i.type == "image":
             if random.randint(0, 1) > config.jadefoot_probability:
-                logger.info("概率未满足，跳过请求")
+                # logger.info("概率未满足，跳过请求")
                 await jade.finish()
                 return
             img_url = i.data["url"]
@@ -78,13 +78,13 @@ async def handle(bot: Bot, event: GroupMessageEvent):
 
             # 如果标签不在字典中，不回复，直接结束
             if res not in reply_map:
-                logger.info("图片无特殊要素")
+                # logger.info("图片无特殊要素")
                 await jade.finish()
                 return
 
             # 获取并回复对应的内容
             reply_message = reply_map.get(res)
-            logger.info(f"够 {reply_message}")
+            # logger.info(f"够 {reply_message}")
             await jade.finish(reply_message, reply_message=True)
 
 
@@ -145,11 +145,11 @@ def is_error_response(res):
         error_code = res['error'].get('code')
         # 处理错误代码 1301（敏感内容）
         if error_code == '1301':
-            logger.info(f"模型敏感内容: {res['error']['message']}")
+            # logger.info(f"模型敏感内容: {res['error']['message']}")
             return True
         # 处理错误代码 1210（不支持的图片）
         elif error_code == '1210':
-            logger.info("接收到不支持的图片")
+            # logger.info("接收到不支持的图片")
             raise ValueError("不支持的图片")  # 抛出异常来阻止后续逻辑
     return False
 
