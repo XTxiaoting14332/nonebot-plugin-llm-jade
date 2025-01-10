@@ -57,7 +57,7 @@ async def handle(bot: Bot, event: GroupMessageEvent):
                 # logger.info("概率未满足，跳过请求")
                 await jade.finish()
                 return
-            img_url = i.data["url"]
+            img_url = i.data["url"].replace("https://","http://")
             logger.info(img_url)
             auth = generate_token(token)
             res = await req_glm(auth, img_url)
