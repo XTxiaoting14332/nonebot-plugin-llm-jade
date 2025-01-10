@@ -73,7 +73,7 @@ async def handle(bot: Bot, event: GroupMessageEvent):
 
             reply_map = {
                 "yuzu_y": "玉！",
-                "yuzu_n": "¿",
+                "yuzu_n": "玉¿",
             }
 
             # 如果标签不在字典中，不回复，直接结束
