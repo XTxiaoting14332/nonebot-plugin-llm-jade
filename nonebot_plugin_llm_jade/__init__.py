@@ -53,39 +53,36 @@ jade = on_message(priority=1, block=False)
 async def handle(bot: Bot, event: GroupMessageEvent):
     for i in event.message:
         if i.type == "image":
-            if random.randint(0, 1) > config.jadefoot_probability:
-                # logger.info("概率未满足，跳过请求")
-                await jade.finish()
-                return
-            img_url = i.data["url"].replace("https://","http://")
-            logger.info(img_url)
-            auth = generate_token(token)
-            res = await req_glm(auth, img_url)
-            try:
-                # 模型拦截检查
-                if is_error_response(res):
-                    await jade.finish("涩！", reply_message=True)
+            if random.randint(0, 1) < config.jadefoot_probability and str(event.group_id) in config.jadefoot_group:
+                img_url = i.data["url"].replace("https://","http://")
+                logger.info(img_url)
+                auth = generate_token(token)
+                res = await req_glm(auth, img_url)
+                try:
+                    # 模型拦截检查
+                    if is_error_response(res):
+                        await jade.finish("涩！", reply_message=True)
+                        return
+                except ValueError:
+                    # 捕获不支持的图片异常
+                    await jade.finish()
                     return
-            except ValueError:
-                # 捕获不支持的图片异常
-                await jade.finish()
-                return
 
-            reply_map = {
-                "yuzu_y": "玉！",
-                "yuzu_n": "玉¿",
-            }
+                reply_map = {
+                    "yuzu_y": "玉！",
+                    "yuzu_n": "玉¿",
+                }
 
-            # 如果标签不在字典中，不回复，直接结束
-            if res not in reply_map:
-                # logger.info("图片无特殊要素")
-                await jade.finish()
-                return
+                # 如果标签不在字典中，不回复，直接结束
+                if res not in reply_map:
+                    # logger.info("图片无特殊要素")
+                    await jade.finish()
+                    return
 
-            # 获取并回复对应的内容
-            reply_message = reply_map.get(res)
-            # logger.info(f"够 {reply_message}")
-            await jade.finish(reply_message, reply_message=True)
+                # 获取并回复对应的内容
+                reply_message = reply_map.get(res)
+                # logger.info(f"够 {reply_message}")
+                await jade.finish(reply_message, reply_message=True)
 
 
 # 异步请求AI
@@ -102,10 +99,9 @@ async def req_glm(auth_token, img_url):
             "content": [
                 {
                     "type": "text",
-                    "text": "需要你进行以下判断，并仅回复符合的标签(如果有多个符合只随机回复一个)："
-                            "1.图片中是否出现了人类或动漫人物的脚（包括裸足和穿袜等），如果是请仅回复“yuzu_y”"
-                            "2.图片中是否出现了动物的脚，如果是请仅回复“yuzu_n”"
-                            "3.都不符合请回复“none”"
+                    "text": "需要你进行以下判断，并仅回复符合的标签："
+                            "1.图片中是否出现了人类的脚（包括裸足和穿袜，不要穿鞋），如果是请仅回复“yuzu_y”"
+                            "2.如果不符合请回复“none”"
                 },
                 {
                     "type": "image_url",
