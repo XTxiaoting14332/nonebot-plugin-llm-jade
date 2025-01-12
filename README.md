@@ -50,7 +50,7 @@ _✨ 基于 LLM 的玉检测插件 ✨_<br>
 
 手动克隆本仓库或直接下载压缩包，将里面的 `nonebot_plugin_llm_jade` 文件夹复制到 `src/plugins` 中,并安装以下依赖
 
-    httpx==0.27.0  PyJWT
+    httpx  PyJWT
 
 </details>
 
@@ -64,6 +64,9 @@ _✨ 基于 LLM 的玉检测插件 ✨_<br>
 ```
 #智谱清言的API Key
 jadefoot_token = xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+启用的群聊
+jadefoot_group = ["123456789","987654321"]
 ```
 
 ### 非必填项
