@@ -53,7 +53,7 @@ jade = on_message(priority=1, block=False)
 async def handle(bot: Bot, event: GroupMessageEvent):
     for i in event.message:
         if i.type == "image":
-            if random.randint(0, 1) < config.jadefoot_probability and str(event.group_id) in config.jadefoot_group:
+            if random.random(0.0, 1.0) < config.jadefoot_probability and str(event.group_id) in config.jadefoot_group:
                 img_url = i.data["url"].replace("https://","http://")
                 logger.info(img_url)
                 auth = generate_token(token)
